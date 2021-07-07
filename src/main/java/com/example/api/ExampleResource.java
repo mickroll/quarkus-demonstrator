@@ -17,6 +17,11 @@ public class ExampleResource {
 
     private final MyBean bean;
 
+    // lombok generates like this:
+    // public ExampleResource(final MyBean bean) {
+    //     this.bean = bean;
+    // }
+
     @GET
     public Example example() {
         return bean.getExample();

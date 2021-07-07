@@ -13,6 +13,11 @@ public class MyBean {
     @ExampleQualifier
     private final Example example;
 
+    // lombok generates like this:
+    // public MyBean(@ExampleQualifier final Example example) {
+    //     this.example = example;
+    // }
+
     public Example getExample() {
         return example;
     }
