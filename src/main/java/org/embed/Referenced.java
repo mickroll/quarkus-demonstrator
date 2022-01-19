@@ -1,16 +1,18 @@
-package org.acme;
+package org.embed;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class State {
+public class Referenced {
     @Id
     @GeneratedValue
     private Long id;
 
-    private String displayName;
+    @Column(nullable = false)
+    private String value;
 
     public Long getId() {
         return id;
@@ -20,11 +22,11 @@ public class State {
         this.id = id;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getValue() {
+        return value;
     }
 
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
+    public void setValue(final String value) {
+        this.value = value;
     }
 }
