@@ -1,42 +1,52 @@
 package org.acme.hibernate.orm;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
-import org.example.entity.catalog.CatalogValue;
-import org.example.entity.catalog.Country;
-import org.example.entity.catalog.FederalState;
+import org.example.entity.example.Payment;
+import org.example.entity.example.PaymentId;
+import org.example.entity.example.StuffToPay;
+import org.example.entity.example.StuffToPayId;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-@TestTransaction
 class ReproducerTest {
 
     @Inject
     EntityManager entityManager;
 
     @Test
-    void metadataCachingBug() {
-        final var bav = findByKey(FederalState.class, "DE-BY");
-        findByKey(Country.class, "DE");
-        bav.getMetadata().size();
+    void reproducer() {
+        var stpId = inTx(() -> {
+            var stuffToPay = new StuffToPay();
+            stuffToPay.setId(new StuffToPayId(UUID.randomUUID()));
+            var payment = new Payment();
+            payment.setId(new PaymentId(UUID.randomUUID()));
+            payment.setFee(new BigDecimal(42));
+            payment.setPaidAt(null);
+            payment.setTransactionNumber("1234567890");
+            stuffToPay.setPayment(payment);
+            entityManager.persist(stuffToPay);
+            return stuffToPay.getId();
+        });
+
+        inTx(() -> {
+            var stuffToPay = entityManager.find(StuffToPay.class, stpId);
+            stuffToPay.confirmPayment();
+            stuffToPay.getPayment().getTransactionNumber(); // AIOOBE while lazy fetching the payment
+            return null;
+        });
     }
 
-    <T extends CatalogValue> T findByKey(final Class<T> type, final String key) {
-        final var cb = entityManager.getCriteriaBuilder();
-        final var query = cb.createQuery(type);
-        final var root = query.from(type);
-        query.where(cb.equal(root.get("key"), key));
-        final var result = entityManager.createQuery(query).getResultList();
-        if (result.isEmpty()) {
-            throw new IllegalStateException("mandatory catalog value not found " + type + key);
-        }
-        if (result.size() == 1) {
-            return result.get(0);
-        }
-        throw new IllegalStateException("multiple entities foun for the same key " + type + key);
+    @Transactional
+    <T> T inTx(Supplier<T> callback) {
+        return callback.get();
     }
 }

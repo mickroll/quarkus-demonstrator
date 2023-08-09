@@ -4,15 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.acme</groupId>
-    <artifactId>hibernate-orm-embeddedid-mapkey</artifactId>
+    <artifactId>hibernate-orm-HHH-16839-reproducer</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus.platform.version>3.2.0.CR1</quarkus.platform.version>
-        <!-- hibernate 6.2.5 fixes a ClassCastException in https://github.com/hibernate/hibernate-orm/blob/6.2.4/hibernate-core/src/main/java/org/hibernate/loader/ast/internal/CollectionBatchLoaderArrayParam.java#L69 -->
-        <version.org.hibernate>6.2.5.Final</version.org.hibernate>
+        <quarkus.platform.version>3.2.3.Final</quarkus.platform.version>
         <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
         <compiler-plugin.version>3.8.0</compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,7 +38,6 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${version.org.hibernate}</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>

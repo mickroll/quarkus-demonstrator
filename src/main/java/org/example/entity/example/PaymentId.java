@@ -1,4 +1,4 @@
-package org.example.entity.catalog;
+package org.example.entity.example;
 
 import java.util.UUID;
 
@@ -7,17 +7,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public final class CatalogValueId {
+public final class PaymentId {
 
     @Column(updatable = false, nullable = false, columnDefinition = "CHAR(36)") // no explicit name for direct id usage as foreign key, named after property
     @Basic
     private UUID uuid;
 
-    public CatalogValueId(final UUID uuid) {
+    public PaymentId(final UUID uuid) {
         this.uuid = uuid;
     }
 
-    protected CatalogValueId() { // for hibernate
+    protected PaymentId() { // for hibernate
     }
 
     @Override
@@ -27,8 +27,8 @@ public final class CatalogValueId {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof CatalogValueId) {
-            return uuid.equals(((CatalogValueId) obj).getUuid());
+        if (obj instanceof PaymentId) {
+            return uuid.equals(((PaymentId) obj).getUuid());
         }
         return false;
     }
@@ -43,6 +43,6 @@ public final class CatalogValueId {
 
     @Override
     public String toString() {
-        return "CatalogValueId(" + uuid + ")";
+        return "PaymentId(" + uuid + ")";
     }
 }
